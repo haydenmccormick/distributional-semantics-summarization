@@ -1,4 +1,3 @@
-import heapq
 import torch
 import torch.nn.functional as F
 from torchtext.vocab import GloVe
@@ -37,3 +36,13 @@ def big_vector(sentence: list[str], embeddings: GloVe, m: int) -> torch.Tensor:
             vector.append(embeddings.vectors[adjusted_idx])
 
     return torch.cat(vector)
+
+
+def pad_trim(vector: torch.Tensor, max_len: int) -> torch.Tensor:
+    """Normalizes a big vector to the given length by appropriately padding or
+    trimming it."""
+    if len(vector) > max_len:
+        return vector[:max_len]
+    else:
+        padding = torch.tensor(0).repeat(max_len - len(vector))
+        return torch.cat([vector, padding])
