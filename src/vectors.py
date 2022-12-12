@@ -14,8 +14,12 @@ def big_vector(sentence: list[str], embeddings: GloVe, m: int) -> torch.Tensor:
     sentence concatenated together."""
     vector = []
     for word in sentence:
+        if word in embeddings.stoi:
+            word_idx = embeddings.stoi[word]
+        else:
+            continue  # ignore unknown words
+
         embedding = embeddings[word]
-        word_idx = embeddings.stoi[word]
         cos = F.cosine_similarity(embedding, embeddings.vectors)
 
         top_m_scores = [cos[word_idx]]  # should be 1
