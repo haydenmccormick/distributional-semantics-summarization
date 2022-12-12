@@ -1,3 +1,4 @@
+import heapq
 import torch
 import torch.nn.functional as F
 from torchtext.vocab import GloVe
@@ -17,12 +18,18 @@ def big_vector(sentence: list[str], embeddings: GloVe, m: int) -> torch.Tensor:
         word_idx = embeddings.stoi[word]
         cos = F.cosine_similarity(embedding, embeddings.vectors)
 
-        # find the most similar word that is not the same word
-        max_idx = torch.argmax(cos[cos != 1])
+        top_m_scores = [cos[word_idx]]  # should be 1
+        top_m_idxs = [word_idx]
+        for i in range(m):
+            # find the most similar word that has not been included yet
+            score, idx = torch.max(cos[cos < top_m_scores[-1]], dim=0)
+            idx = int(idx)
+            top_m_scores.append(score)
+            top_m_idxs.append(idx)
+            top_m_idxs = sorted(top_m_idxs)
 
-        # adjust index for filtering out same word
-        adjusted_idx = max_idx if max_idx < word_idx else max_idx + 1
+            # adjust index for filtering out already included words
+            adjusted_idx = idx + top_m_idxs.index(idx)
+            vector.append(embeddings.vectors[adjusted_idx])
 
-        similar = embeddings.vectors[adjusted_idx]
-        vector.append(similar)
     return torch.cat(vector)
