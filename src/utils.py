@@ -4,7 +4,7 @@ from nltk.corpus import brown
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from typing import List
+# from typing import List
 
 
 def download():
@@ -15,20 +15,21 @@ def download():
     nltk.download('omw-1.4')
 
 
-def preprocess(sentences: str) -> List[str]:
+def preprocess(sentences: list[list[str]]) -> list[list[str]]:
     """Preprocessing of input string for summarization algorithm"""
-    sentences = sentences.lower()
-    # Remove URLs
-    sentences = re.sub(r'https?:\/\/.*?[\s]', '', sentences)
-    # Tokenize and remove stop words
-    tokenized_words = [word for word in word_tokenize(sentences)
-                       if word not in stopwords.words('english')]
-    # Lemmatize
     lemmatizer = WordNetLemmatizer()
-    processed_sent = []
-    for word in tokenized_words:
-        processed_sent.append(lemmatizer.lemmatize(word))
-    return processed_sent
+    processed_sents = []
+    for sent in sentences:
+      processed_sent = []
+      for word in sent:
+        # Strip stop words
+        if word not in stopwords.words('english'):
+          # Strip URLs
+          url_stripped = re.sub(r'https?:\/\/.*?[\s]', '', word)
+          # Lemmatize and lowercase
+          processed_sent.append(lemmatizer.lemmatize(url_stripped.lower()))
+      processed_sents.append(processed_sent)
+    return processed_sents
 
 
 def load_file(name: str) -> list[list[str]]:
