@@ -17,15 +17,12 @@ class Document:
         return counts
 
 
-def document_frequencies(vocab: list[str],
-                         documents: list[Document]
-                         ) -> Counter[str]:
-    """Counts the document frequencies for all vocab words in all documents."""
+def document_frequencies(documents: list[Document]) -> Counter[str]:
+    """Counts the document frequencies for words in all documents."""
     frequencies = Counter()
-    for token in vocab:
-        for document in documents:
-            if token in document.token_counts:
-                frequencies[token] += 1
+    for document in documents:
+        for token in document.token_counts:
+            frequencies[token] += 1
     return frequencies
 
 
