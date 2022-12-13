@@ -17,7 +17,10 @@ class Document:
         return counts
 
 
-def document_frequencies(vocab, documents) -> Counter[str]:
+def document_frequencies(vocab: list[str],
+                         documents: list[Document]
+                         ) -> Counter[str]:
+    """Counts the document frequencies for all vocab words in all documents."""
     frequencies = Counter()
     for token in vocab:
         for document in documents:
@@ -27,10 +30,11 @@ def document_frequencies(vocab, documents) -> Counter[str]:
 
 
 def tfidf(term: str,
-          document,
+          document: list[Document],
           frequencies: Counter[str],
           num_documents: int
           ) -> float:
+    """Calculates the term-frequency/inverse document frequency of a term."""
     tf = log(document.token_counts[term] + 1, 10)
-    idf = log(num_documents / frequencies[term])
+    idf = log(num_documents / frequencies[term], 10)
     return tf * idf
