@@ -27,7 +27,7 @@ def document_frequencies(documents: list[Document]) -> Counter[str]:
 
 
 def tfidf(term: str,
-          document: list[Document],
+          document: Document,
           frequencies: Counter[str],
           num_documents: int
           ) -> float:
