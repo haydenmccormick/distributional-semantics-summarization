@@ -1,5 +1,6 @@
 import re
 import nltk
+from nltk.corpus import brown
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -7,6 +8,7 @@ from typing import List
 
 
 def download():
+    nltk.download('brown')
     nltk.download('punkt')
     nltk.download('stopwords')
     nltk.download('wordnet')
@@ -29,8 +31,8 @@ def preprocess(sentences: str) -> List[str]:
     return processed_sent
 
 
-def load_file(path: str) -> list[list[str]]:
-    with open(path, 'r', encoding='utf8') as f:
+def load_file(name: str) -> list[list[str]]:
+    with brown.open(name) as f:
         sentences = []
         for line in f.readlines():
             line = line.strip()
