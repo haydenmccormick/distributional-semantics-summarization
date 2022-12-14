@@ -1,3 +1,5 @@
+import torch
+from sklearn.cluster import KMeans
 from math import log
 from collections import Counter
 
@@ -15,6 +17,11 @@ class Document:
         for sentence in self.sentences:
             counts.update(sentence)
         return counts
+
+
+def cluster(big_vectors: list[torch.Tensor], n_clusters: int):
+    kmeans = KMeans(n_clusters=n_clusters, n_init='auto')
+    return kmeans.fit_predict(big_vectors)
 
 
 def document_frequencies(documents: list[Document]) -> Counter[str]:
