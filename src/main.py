@@ -20,8 +20,9 @@ def prepare_documents(path: str) -> list[Document]:
     documents = []
     for name in brown.fileids():
         print(name)
-        sentences = utils.load_file(name)
-        documents.append(Document(name, utils.preprocess(sentences)))
+        raw_sentences = utils.load_file(name)
+        sentences = utils.preprocess(raw_sentences)
+        documents.append(Document(name, raw_sentences, sentences))
 
     # save documents
     with open(path, 'wb') as f:

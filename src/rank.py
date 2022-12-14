@@ -7,8 +7,11 @@ from collections import Counter
 class Document:
     """Document object that holds information for Brown files."""
 
-    def __init__(self, name: str, sentences: list[list[str]]):
+    def __init__(self, name: str,
+                 raw_sentences: list[list[str]],
+                 sentences: list[list[str]]):
         self.name = name
+        self.raw_sentences = raw_sentences
         self.sentences = sentences
         self.token_counts = self.count_tokens()
 
