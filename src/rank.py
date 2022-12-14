@@ -36,12 +36,16 @@ def document_frequencies(documents: list[Document]) -> Counter[str]:
     return frequencies
 
 
-def tfidf(term: str,
+def tfidf(sentence: list[str],
           document: Document,
           frequencies: Counter[str],
           num_documents: int
           ) -> float:
-    """Calculates the term-frequency/inverse document frequency of a term."""
-    tf = log(document.token_counts[term] + 1, 10)
-    idf = log(num_documents / frequencies[term], 10)
-    return tf * idf
+    """Calculates sum of the term-frequency/inverse document frequency of each
+    term in the sentence."""
+    total = 0.
+    for term in sentence:
+        tf = log(document.token_counts[term] + 1, 10)
+        idf = log(num_documents / frequencies[term], 10)
+        total += tf * idf
+    return total
