@@ -35,9 +35,12 @@ def preprocess(sentences: list[list[str]]) -> list[list[str]]:
 def load_file(name: str) -> list[list[str]]:
     with brown.open(name) as f:
         sentences = []
+        tags = []
         for line in f.readlines():
             line = line.strip()
             if line:
                 sentence = [pair.split("/")[0] for pair in line.split()]
+                sentence_tags = [pair.split("/")[1] for pair in line.split()]
                 sentences.append(sentence)
-    return sentences
+                tags.append(sentence_tags)
+    return sentences, tags
