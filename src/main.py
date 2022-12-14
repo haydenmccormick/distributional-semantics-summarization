@@ -42,7 +42,6 @@ def main():
     ca01 = documents[0]
     vecs = torch.stack([vectors.pad_trim(vectors.big_vector(s, glove, 3), 1000)
                         for s in ca01.sentences])
-    print(rank.cosine_similarity(vecs, 2))
     print("Clustering...")
     clusters = rank.cluster(vecs, n_clusters=10)
     print("Ranking and summarizing...")

@@ -57,6 +57,7 @@ def tfidf(sentence: list[str],
 
 def count_np_vp(tags: list[str],
                 index: int) -> (int, int):
+    total_length = len(tags)
     sentence_tags = Counter(tags[index])
     proper_noun_tags = ["np", "np$", "nps", "nps$"]
     noun_tags = ["nn", "nn$", "nns", "nns$", "nr", "nrs"]
@@ -64,7 +65,7 @@ def count_np_vp(tags: list[str],
     proper_noun_score = sum([sentence_tags[tag] for tag in proper_noun_tags])
     noun_score = sum([sentence_tags[tag] for tag in noun_tags])
     verb_score = sum([sentence_tags[tag] for tag in verb_tags])
-    return noun_score+verb_score, proper_noun_score
+    return (noun_score+verb_score)/total_length, (proper_noun_score)/total_length
 
 
 def cosine_similarity(vecs: torch.Tensor, index: int):
@@ -76,6 +77,11 @@ def cosine_similarity(vecs: torch.Tensor, index: int):
     else:
         return 0.0
 
+def normalized_sentence_len(sentence, sentences):
+    max_len = max([len(sent) for sent in sentences])
+    return len(sentence)/max_len
+
+
 # TODO: Normalization and cue phrases
 def rank(sentences: list[list[str]],
          document: Document,
@@ -86,7 +92,7 @@ def rank(sentences: list[list[str]],
     freqs = document_frequencies(documents)
     for i, sentence in enumerate(sentences):
         # Sentence length feature
-        s_len = len(sentence)
+        s_len = normalized_sentence_len(sentence, sentences)
         # Sentence position feature
         s_pos = 1-((i-1)/(len(sentences)))
         # TF-IDF feature
@@ -97,7 +103,6 @@ def rank(sentences: list[list[str]],
         cos_similarity = cosine_similarity(vectors, i)
         scores[i] = sum([s_len, s_pos, tfidf_freq, np_vp_score, proper_noun_score, cos_similarity])
     return scores
-
 
 def summarize(clusters, scores, document, n):
     """Produce summary containing only top n sentences per cluster"""
@@ -114,4 +119,5 @@ def summarize(clusters, scores, document, n):
     sentence_indices.sort()
     # Finally, pull best sentences from document
     summary = [document.raw_sentences[i] for i in sentence_indices]
-    return summary
+    summary_strings = [" ".join(sent) for sent in summary]
+    return " ".join(summary_strings)
