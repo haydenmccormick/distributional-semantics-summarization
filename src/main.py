@@ -8,6 +8,10 @@ import torch
 from nltk.corpus import brown
 from rank import Document
 
+from summarizer import Summarizer
+
+from rouge import Rouge
+
 PREPROCESS_PATH: str = "preprocessed.pkl"
 
 
@@ -30,6 +34,18 @@ def prepare_documents(path: str) -> list[Document]:
 
     return documents
 
+def generate_reference_summary(document: Document):
+
+    # flatten
+    body = document.raw_sentences
+
+
+def evaluate_summaries(gen_summary: str, ref_summary: str):
+    rouge = Rouge()
+
+    scores = rouge.get_scores(gen_summary, ref_summary)
+
+    return scores
 
 def main():
     print("Downloading data...")
@@ -46,11 +62,13 @@ def main():
     clusters = rank.cluster(vecs, n_clusters=10)
     print("Ranking and summarizing...")
     rankings = rank.rank(ca01.sentences, ca01, documents, vecs)
-    summary = rank.summarize(clusters, rankings, ca01, 1)
-    print(summary)
+    gen_summary = rank.summarize(clusters, rankings, ca01, 1)
+    print(gen_summary)
 
+    ref_summary = generate_reference_summary(ca01)
 
-
+    scores = evaluate_summaries(gen_summary, ref_summary)
+    print(scores)
 
 
 if __name__ == "__main__":
