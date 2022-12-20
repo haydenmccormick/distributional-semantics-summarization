@@ -44,3 +44,9 @@ def load_file(name: str) -> list[list[str]]:
                 sentences.append(sentence)
                 tags.append(sentence_tags)
     return sentences, tags
+
+
+def flatten_sentences(sents):
+    sent_strings = [" ".join(sent) for sent in sents]
+    return " ".join(sent_strings)
+

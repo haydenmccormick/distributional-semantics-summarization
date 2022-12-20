@@ -34,15 +34,18 @@ def prepare_documents(path: str) -> list[Document]:
 
     return documents
 
-def generate_reference_summary(document: Document):
+
+def generate_reference_summary(document: Document, n_sents: int):
 
     # flatten
-    body = document.raw_sentences
+    body = utils.flatten_sentences(document.raw_sentences)
+    model = Summarizer()
+    return model(body, num_sentences=n_sents)
 
 
 def evaluate_summaries(gen_summary: str, ref_summary: str):
-    rouge = Rouge()
 
+    rouge = Rouge()
     scores = rouge.get_scores(gen_summary, ref_summary)
 
     return scores
@@ -65,7 +68,7 @@ def main():
     gen_summary = rank.summarize(clusters, rankings, ca01, 1)
     print(gen_summary)
 
-    ref_summary = generate_reference_summary(ca01)
+    ref_summary = generate_reference_summary(ca01, 10)
 
     scores = evaluate_summaries(gen_summary, ref_summary)
     print(scores)

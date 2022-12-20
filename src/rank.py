@@ -4,6 +4,7 @@ from math import log
 from collections import Counter
 import numpy as np
 from nltk import pos_tag
+from utils import flatten_sentences
 
 
 class Document:
@@ -150,5 +151,4 @@ def summarize(clusters, scores, document, n):
     sentence_indices.sort()
     # Finally, pull best sentences from document
     summary = [document.raw_sentences[i] for i in sentence_indices]
-    summary_strings = [" ".join(sent) for sent in summary]
-    return " ".join(summary_strings)
+    return flatten_sentences(summary)
