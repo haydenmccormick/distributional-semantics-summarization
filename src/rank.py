@@ -3,7 +3,6 @@ from sklearn.cluster import KMeans
 from math import log
 from collections import Counter
 import numpy as np
-from nltk import pos_tag
 from utils import flatten_sentences
 
 
@@ -11,9 +10,9 @@ class Document:
     """Document object that holds information for Brown files."""
 
     def __init__(self, name: str,
-                 raw_sentences: list[list[str]],
+                 raw_sentences: list[str],
                  sentences: list[list[str]],
-                 tags: list[list[str]]):
+                 tags: list[str]):
         self.name = name
         self.raw_sentences = raw_sentences
         self.sentences = sentences
@@ -27,7 +26,7 @@ class Document:
         return counts
 
 
-def cluster(big_vectors: list[torch.Tensor], n_clusters: int):
+def cluster(big_vectors: torch.Tensor, n_clusters: int):
     kmeans = KMeans(n_clusters=n_clusters)
     return kmeans.fit_predict(big_vectors)
 
@@ -58,7 +57,7 @@ def tfidf(sentence: list[str],
 
 
 def count_np_vp(tags: list[str],
-                index: int) -> (int, int):
+                index: int) -> tuple[float, float]:
     total_length = len(tags)
     sentence_tags = Counter(tags[index])
     proper_noun_tags = ["np", "np$", "nps", "nps$"]
@@ -103,7 +102,7 @@ def rank(sentences: list[list[str]],
 
     for i, sentence in enumerate(sentences):
         # Sentence length feature
-        s_len = len(sentence) #normalized_sentence_len(sentence, sentences)
+        s_len = len(sentence)  # normalized_sentence_len(sentence, sentences)
         s_len_values_normalized[i] = s_len
         # Sentence position feature
         s_pos = 1 - (((i+1) - 1) / (len(sentences)))

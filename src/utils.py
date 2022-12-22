@@ -15,24 +15,25 @@ def download():
     nltk.download('omw-1.4')
 
 
-def preprocess(sentences: list[list[str]]) -> list[list[str]]:
+def preprocess(sentences: list[str]) -> list[list[str]]:
     """Preprocessing of input string for summarization algorithm"""
     lemmatizer = WordNetLemmatizer()
     processed_sents = []
     for sent in sentences:
-      processed_sent = []
-      for word in sent:
-        # Strip stop words
-        if word not in stopwords.words('english'):
-          # Strip URLs
-          url_stripped = re.sub(r'https?:\/\/.*?[\s]', '', word)
-          # Lemmatize and lowercase
-          processed_sent.append(lemmatizer.lemmatize(url_stripped.lower()))
-      processed_sents.append(processed_sent)
+        processed_sent = []
+        for word in sent:
+            # Strip stop words
+            if word not in stopwords.words('english'):
+                # Strip URLs
+                url_stripped = re.sub(r'https?:\/\/.*?[\s]', '', word)
+                # Lemmatize and lowercase
+                processed_sent.append(
+                    lemmatizer.lemmatize(url_stripped.lower()))
+        processed_sents.append(processed_sent)
     return processed_sents
 
 
-def load_file(name: str) -> list[list[str]]:
+def load_file(name: str) -> tuple[list[list[str]], list[list[str]]]:
     with brown.open(name) as f:
         sentences = []
         tags = []
@@ -49,4 +50,3 @@ def load_file(name: str) -> list[list[str]]:
 def flatten_sentences(sents):
     sent_strings = [" ".join(sent) for sent in sents]
     return " ".join(sent_strings)
-
