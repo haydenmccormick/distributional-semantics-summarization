@@ -1,7 +1,7 @@
-torch=1.13
-torchtext=0.14
-numpy=1.23
-nltk=3.7
-scikit-learn=1.2
-rouge=1.0.1
-bert-extractive-summarizer=0.10.1
+torch==1.13
+torchtext==0.14
+numpy==1.23
+nltk==3.7
+scikit-learn==1.2
+rouge==1.0.1
+bert-extractive-summarizer==0.10.1

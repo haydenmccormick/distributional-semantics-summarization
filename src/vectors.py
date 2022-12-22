@@ -35,7 +35,10 @@ def big_vector(sentence: list[str], embeddings: GloVe, m: int) -> torch.Tensor:
             adjusted_idx = idx + top_m_idxs.index(idx)
             vector.append(embeddings.vectors[adjusted_idx])
 
-    return torch.cat(vector)
+    if vector:
+        return torch.cat(vector)
+    else:
+        return torch.zeros(1)  # if every word in the sentence is unknown
 
 
 def pad_trim(vector: torch.Tensor, max_len: int) -> torch.Tensor:
